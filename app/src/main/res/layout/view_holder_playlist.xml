@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:backgroundTint="@color/primaryDark"
+    app:cardCornerRadius="8dp">
+
+    <LinearLayout
+        android:id="@+id/itemLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
+
+        <!--    song image-->
+        <androidx.cardview.widget.CardView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="1dp"
+            app:cardBackgroundColor="@color/primaryDark"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/imgPlaylist"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_playlis_svg" />
+
+        </androidx.cardview.widget.CardView>
+
+        <!--        song info-->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_marginStart="2dp"
+            android:orientation="vertical">
+
+            <!--            song name-->
+            <TextView
+                android:id="@+id/tvPlaylistTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:fontFamily="sans-serif-medium"
+                android:marqueeRepeatLimit="1"
+                android:maxLines="2"
+                android:scrollHorizontally="true"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <!--            artist name-->
+<!--            <TextView-->
+<!--                android:id="@+id/tvTotalSong"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginStart="2dp"-->
+<!--                android:singleLine="true"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="13sp" />-->
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imgMore"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_more"/>
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

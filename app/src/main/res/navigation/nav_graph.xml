@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/songFragment">
+
+    <fragment
+        android:id="@+id/songFragment"
+        android:name="com.ankurkushwaha.chaos.presentation.screens.SongFragment"
+        android:label="fragment_song"
+        tools:layout="@layout/fragment_song" >
+        <action
+            android:id="@+id/action_songFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="com.ankurkushwaha.chaos.presentation.screens.PlayerFragment"
+        android:label="fragment_player"
+        tools:layout="@layout/fragment_player">
+        <argument
+            android:name="songs"
+            app:argType="com.ankurkushwaha.chaos.data.model.Song" />
+    </fragment>
+
+</navigation>
