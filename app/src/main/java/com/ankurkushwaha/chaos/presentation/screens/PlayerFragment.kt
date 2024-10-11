@@ -68,6 +68,7 @@ class PlayerFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        dialog?.setCanceledOnTouchOutside(false)
         setupListeners()
         setupSeekBar()
     }
@@ -90,6 +91,9 @@ class PlayerFragment : BottomSheetDialogFragment() {
         // Optionally, expand the bottom sheet to full height immediately
         val behavior = BottomSheetBehavior.from(bottomSheet!!)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+        // Disable dragging of the BottomSheet
+        behavior.isDraggable = false
     }
 
     override fun onStop() {

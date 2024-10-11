@@ -100,6 +100,9 @@ class PlaylistsSongFragment : BottomSheetDialogFragment(), OnSongMenuClickListen
         // Optionally, expand the bottom sheet to full height immediately
         val behavior = BottomSheetBehavior.from(bottomSheet!!)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+        // Disable dragging of the BottomSheet
+        behavior.isDraggable = false
     }
 
     override fun onStop() {

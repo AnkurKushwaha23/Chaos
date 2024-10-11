@@ -44,11 +44,19 @@ class MenuBottomSheetFragment : BottomSheetDialogFragment() {
                 bottomSheet.show(childFragmentManager, "CustomBottomSheet")
             }
 
+            share.setOnClickListener {
+                val shareIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, "Check out this Android App: $APP_LINK")
+                    type = "text/plain"
+                }
+                val chooser = Intent.createChooser(shareIntent, "Share article via")
+                startActivity(chooser)
+            }
+
             aboutDeveloper.setOnClickListener {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_LINK))
                 startActivity(intent)
-                Toast.makeText(requireContext(), "Thanks for Contacting Us !!", Toast.LENGTH_SHORT)
-                    .show()
             }
         }
     }
@@ -71,5 +79,6 @@ class MenuBottomSheetFragment : BottomSheetDialogFragment() {
     companion object {
         private const val EMAIL = "ankursenpai@gmail.com"
         private const val GITHUB_LINK = "https://github.com/AnkurKushwaha23/"
+        private const val APP_LINK = "https://drive.google.com/file/d/1j2WnoppEDhbhTkxawwy8pLrJ7P9kZqlw/view?usp=sharing"
     }
 }

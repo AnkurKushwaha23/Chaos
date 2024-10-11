@@ -30,6 +30,7 @@ class SleepTimerBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        dialog?.setCanceledOnTouchOutside(false)
         initPicker()
         // Check if there's an existing worker and update the switch
         checkIfWorkerIsRunning()

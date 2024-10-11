@@ -1,13 +1,9 @@
 package com.ankurkushwaha.chaos.presentation.screens
 
 import android.annotation.SuppressLint
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.IBinder
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,16 +14,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.ankurkushwaha.chaos.R
 import com.ankurkushwaha.chaos.databinding.ActivityMainBinding
-import com.ankurkushwaha.chaos.services.MusicService
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.update
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -42,26 +32,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNav: BottomNavigationView
 
-    private var musicService: MusicService? = null
-    private var isBound = false
-    private val isPlayingSong = MutableStateFlow<Boolean>(false)
-
-
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder = service as MusicService.MusicBinder
-            musicService = binder.getService()
-            isBound = true
-            musicService?.isPlaying()?.onEach { isPlaying ->
-                isPlayingSong.update { isPlaying }
-            }?.launchIn(lifecycleScope)
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-            musicService = null
-            isBound = false
-        }
-    }
 
     @SuppressLint("InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +48,6 @@ class MainActivity : AppCompatActivity() {
 
         requestPermissions()
         setupUI()
-        bindMusicService()
     }
 
     private fun setupUI() {
@@ -119,12 +88,6 @@ class MainActivity : AppCompatActivity() {
         bottomNav.selectedItemId = R.id.songsFragment
     }
 
-    private fun bindMusicService() {
-        Intent(this, MusicService::class.java).also { intent ->
-            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-        }
-    }
-
     // Function to load fragments
     private fun loadFragment(fragment: Fragment): Boolean {
         supportFragmentManager.beginTransaction()
@@ -148,6 +111,11 @@ class MainActivity : AppCompatActivity() {
                 isPostNotificationPermissionGranted =
                     permissions[android.Manifest.permission.POST_NOTIFICATIONS]
                         ?: isPostNotificationPermissionGranted
+
+                // Check if the necessary permissions are granted
+                if (isReadPermissionGranted) {
+                    loadFragment(SongFragment())
+                }
             }
 
         val permissionsToRequest = mutableListOf<String>().apply {
@@ -187,16 +155,8 @@ class MainActivity : AppCompatActivity() {
         binding.miniPlayerContainerView.isVisible = isVisible
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
-        if (isBound) {
-            unbindService(serviceConnection)
-            isBound = false
-        }
-        if (!isPlayingSong.value) {
-            stopService(Intent(this, MusicService::class.java))
-        }
         _binding = null
     }
 }

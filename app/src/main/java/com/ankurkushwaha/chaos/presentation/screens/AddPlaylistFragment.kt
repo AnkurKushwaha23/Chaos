@@ -51,7 +51,7 @@ class AddPlaylistFragment : BottomSheetDialogFragment(), OnPlaylistMenuClickList
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        dialog?.setCanceledOnTouchOutside(false)
         observePlaylist()
         setupRecyclerView()
         binding.createNewPlaylist.setOnClickListener {
@@ -65,6 +65,7 @@ class AddPlaylistFragment : BottomSheetDialogFragment(), OnPlaylistMenuClickList
 
         // Build the AlertDialog
         val dialog = AlertDialog.Builder(requireContext())
+            .setCancelable(false)
             .setTitle("New Playlist") // Set the title
             .setView(editText) // Set the EditText as the dialog's view
             .setPositiveButton("Ok") { dialogInterface, _ ->

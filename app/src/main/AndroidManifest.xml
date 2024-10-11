@@ -10,9 +10,10 @@
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+
 
     <application
         android:name=".BaseApplication"
@@ -45,13 +46,6 @@
             android:foregroundServiceType="mediaPlayback" />
 
         <receiver
-            android:name=".receivers.CallReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.PHONE_STATE" />
-            </intent-filter>
-        </receiver>
-        <receiver
             android:name=".receivers.HeadphoneReceiver"
             android:exported="false">
             <intent-filter>
@@ -59,6 +53,7 @@
                 <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />
             </intent-filter>
         </receiver>
+
         <receiver
             android:name=".receivers.TimerStopMusicReceiver"
             android:exported="false">
@@ -66,6 +61,7 @@
                 <action android:name="com.ankurkushwaha.chaos.STOP_MUSIC_SERVICE" />
             </intent-filter>
         </receiver>
+
         <receiver
             android:name="androidx.media.session.MediaButtonReceiver"
             android:enabled="true"
@@ -74,6 +70,7 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>

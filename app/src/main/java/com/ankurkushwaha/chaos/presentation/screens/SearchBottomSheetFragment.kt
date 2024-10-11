@@ -67,26 +67,6 @@ class SearchBottomSheetFragment : BottomSheetDialogFragment(), OnSongMenuClickLi
         return binding.root
     }
 
-//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-//        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-//
-//        dialog.setOnShowListener { dialogInterface ->
-//            val bottomSheetDialog = dialogInterface as BottomSheetDialog
-//            val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout?
-//            bottomSheet?.let {
-//                val behavior = BottomSheetBehavior.from(it)
-//                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-//                behavior.skipCollapsed = true
-//                behavior.isHideable = true
-//
-//                // Set the peek height to the parent height to prevent scrolling at the bottom
-//                it.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-//            }
-//        }
-//
-//        return dialog
-//    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dialog?.setCanceledOnTouchOutside(false)
@@ -119,6 +99,9 @@ class SearchBottomSheetFragment : BottomSheetDialogFragment(), OnSongMenuClickLi
         // Optionally, expand the bottom sheet to full height immediately
         val behavior = BottomSheetBehavior.from(bottomSheet!!)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+        // Disable dragging of the BottomSheet
+        behavior.isDraggable = false
     }
 
     override fun onStop() {
