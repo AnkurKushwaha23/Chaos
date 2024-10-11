@@ -1,6 +1,6 @@
-# Chaos Music Player
+# Chaos Music Player: *"Feel Calm in Chaos"*
 
-Chaos is an offline music player for Android that fetches and plays songs stored on the local device. This app comes with a variety of features that enhance the user experience, such as repeat mode, shuffle, search functionality, the ability to add songs to favorites and playlists, a sleep timer, and more.
+**Chaos Music Player** is a offline music player for Android, designed to fetch and play your local music files seamlessly. With a wide array of features like repeat mode, shuffle, search, favorites, playlists, and a sleep timer, Chaos provides a calm and personalized music experience—perfect for enjoying your music library exactly the way you like it.
 
 [![Get the App](https://img.shields.io/badge/Get%20Chaos%20Music%20Player-Download-4CAF50?style=flat&logo=google-drive&logoColor=white)](https://drive.google.com/file/d/1j2WnoppEDhbhTkxawwy8pLrJ7P9kZqlw/view?usp=sharing)
 
@@ -59,3 +59,27 @@ One of the biggest challenges in this project was finding up-to-date resources f
 ## Conclusion
 
 I completed **Chaos Music Player** through a collaborative effort. I contributed 50% of the work, ChatGPT provided 45% of the help, and the remaining 5% came from YouTube tutorials. This project has been a rewarding learning experience, and I'm thankful to all the resources that helped me reach the finish line!
+
+## Screenshots 
+
+
+![Screenshot_20241011-084655](https://github.com/user-attachments/assets/5d9fc6f7-71e1-4f65-8942-574eb5a443a7)
+
+![Screenshot_20241011-084735](https://github.com/user-attachments/assets/4c0f1072-d8db-4d0f-823f-283adcc5b3fb)
+
+![Screenshot_20241011-084857](https://github.com/user-attachments/assets/3eda4f20-eb30-4a41-a6e1-559ceb190846)
+
+![Screenshot_20241011-084925](https://github.com/user-attachments/assets/a22cbb97-efa5-48a1-bc25-9cdd263dd774)
+
+![Screenshot_20241011-084935](https://github.com/user-attachments/assets/9fd2e2fa-806c-4375-b44f-ab9c12d800a8)
+
+![Screenshot_20241011-085000](https://github.com/user-attachments/assets/2fce0fc5-7bd8-4122-af93-795f70d1dc09)
+
+![Screenshot_20241011-085046](https://github.com/user-attachments/assets/55014de9-34ed-4b0d-a294-7200a42e8fc7)
+
+![Screenshot_20241011-085054](https://github.com/user-attachments/assets/9564bd3c-d399-4621-af37-40789c899002)
+
+![Screenshot_20241011-085126](https://github.com/user-attachments/assets/0f8e93d9-c940-46d9-8a3e-6dbe480eb3c3)
+
+![Screenshot_20241011-085131](https://github.com/user-attachments/assets/7216ac08-0acb-4efb-9df5-d11acda32f99)
+
