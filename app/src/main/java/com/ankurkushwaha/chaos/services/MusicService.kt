@@ -68,6 +68,8 @@ class MusicService : Service() {
     private val scope = CoroutineScope(Dispatchers.Main)
     private var job: Job? = null
 
+    private var receiversRegistered = false
+
     private lateinit var audioManager: AudioManager
     private var audioFocusRequest: AudioFocusRequest? = null
 
@@ -130,23 +132,44 @@ class MusicService : Service() {
         return START_STICKY
     }
 
-    /** Initialize BroadCastReceivers*/
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun initializeReceivers() {
-        headphoneReceiver = HeadphoneReceiver()
-        timerStopMusicReceiver = TimerStopMusicReceiver()
+        if (receiversRegistered) return  // Prevent double registration
 
-        val filter = IntentFilter().apply {
-            addAction(Intent.ACTION_HEADSET_PLUG)
-            addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
-        }
-        registerReceiver(headphoneReceiver, filter)
+        try {
+            // Initialize receivers
+            headphoneReceiver = HeadphoneReceiver()
+            timerStopMusicReceiver = TimerStopMusicReceiver()
 
-        val timerStopFilter = IntentFilter("com.ankurkushwaha.chaos.STOP_MUSIC_SERVICE")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(timerStopMusicReceiver, timerStopFilter, RECEIVER_NOT_EXPORTED)
-        } else {
-            registerReceiver(timerStopMusicReceiver, timerStopFilter)
+            // Register headphone receiver
+            val headphoneFilter = IntentFilter().apply {
+                addAction(Intent.ACTION_HEADSET_PLUG)
+                addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(
+                    headphoneReceiver, headphoneFilter, Context.RECEIVER_NOT_EXPORTED
+                )
+            } else {
+                registerReceiver(headphoneReceiver, headphoneFilter)
+            }
+
+            // Register timer stop receiver
+            val timerStopFilter = IntentFilter("com.ankurkushwaha.chaos.STOP_MUSIC_SERVICE")
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(
+                    timerStopMusicReceiver, timerStopFilter, Context.RECEIVER_NOT_EXPORTED
+                )
+            } else {
+                registerReceiver(timerStopMusicReceiver, timerStopFilter)
+            }
+
+            receiversRegistered = true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e("MusicService_Receivers",e.message.toString())
         }
     }
 
@@ -208,10 +231,12 @@ class MusicService : Service() {
 
     /**Pause the music */
     fun pauseMusic(flag:Boolean = false) {
-        mediaPlayer.pause()
-        isPlaying.update { false }
-        if (!flag) {
-            sendNotification(currentMusic.value!!)
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.pause()
+            isPlaying.update { false }
+            if (!flag) {
+                currentMusic.value?.let { sendNotification(it) }
+            }
         }
     }
 
@@ -675,6 +700,24 @@ class MusicService : Service() {
         }
     }
 
+    private fun cleanupReceivers() {
+        if (!receiversRegistered) return  // Nothing to cleanup
+        // Unregister the broadcast receivers
+        try {
+            unregisterReceiver(headphoneReceiver)
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace() // Receiver wasn't registered, log it if needed
+        }
+
+        try {
+            unregisterReceiver(timerStopMusicReceiver)
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace() // Receiver wasn't registered, log it if needed
+        }
+
+        receiversRegistered = false
+    }
+
     /**clean the resources by stop service and unregister receivers */
     override fun onDestroy() {
         super.onDestroy()
@@ -693,18 +736,7 @@ class MusicService : Service() {
         } catch (e: IllegalArgumentException) {
             e.printStackTrace()
         }
-        // Unregister the broadcast receivers
-        try {
-            unregisterReceiver(headphoneReceiver)
-        } catch (e: IllegalArgumentException) {
-            e.printStackTrace() // Receiver wasn't registered, log it if needed
-        }
-
-        try {
-            unregisterReceiver(timerStopMusicReceiver)
-        } catch (e: IllegalArgumentException) {
-            e.printStackTrace() // Receiver wasn't registered, log it if needed
-        }
+        cleanupReceivers()
         // Abandon audio focus when the service is destroyed
         try {
             abandonAudioFocus()
