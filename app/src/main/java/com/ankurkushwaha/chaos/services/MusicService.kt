@@ -111,7 +111,7 @@ class MusicService : Service() {
             NEXT -> nextSong()
             CANCEL -> {
                 job?.cancel()
-                pauseMusic()
+                pauseMusic(true)
                 removeForeground()
                 // Stop the service if the media player is not playing
                 if (!mediaPlayer.isPlaying) {
@@ -207,9 +207,12 @@ class MusicService : Service() {
     }
 
     /**Pause the music */
-    fun pauseMusic() {
+    fun pauseMusic(flag:Boolean = false) {
         mediaPlayer.pause()
         isPlaying.update { false }
+        if (!flag) {
+            sendNotification(currentMusic.value!!)
+        }
     }
 
     /**Return song total duration */
@@ -629,7 +632,7 @@ class MusicService : Service() {
 
             AudioManager.AUDIOFOCUS_GAIN -> {
                 // Resume playback
-                playPause()
+//                playPause()
             }
         }
     }

@@ -1,13 +1,14 @@
 package com.ankurkushwaha.chaos.presentation.screens
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
@@ -22,16 +23,15 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
-    private var isReadPermissionGranted = false
-    private var isPostNotificationPermissionGranted = false
-
     private var _binding: ActivityMainBinding? = null
     private val binding: ActivityMainBinding
         get() = _binding!!
 
     private lateinit var bottomNav: BottomNavigationView
 
+    companion object {
+        private const val PERMISSION_REQUEST_CODE = 234
+    }
 
     @SuppressLint("InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,8 +44,6 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-
         requestPermissions()
         setupUI()
     }
@@ -101,44 +99,75 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** permissions*/
-    @SuppressLint("InlinedApi")
     private fun requestPermissions() {
-        permissionLauncher =
-            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-                isReadPermissionGranted =
-                    permissions[android.Manifest.permission.READ_EXTERNAL_STORAGE]
-                        ?: isReadPermissionGranted
-                isPostNotificationPermissionGranted =
-                    permissions[android.Manifest.permission.POST_NOTIFICATIONS]
-                        ?: isPostNotificationPermissionGranted
+        val permissionsToRequest = mutableListOf<String>()
 
-                // Check if the necessary permissions are granted
-                if (isReadPermissionGranted) {
-                    loadFragment(SongFragment())
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+                // Android 13+ (API 33+)
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.READ_MEDIA_AUDIO
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    permissionsToRequest.add(Manifest.permission.READ_MEDIA_AUDIO)
+                }
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    permissionsToRequest.add(Manifest.permission.POST_NOTIFICATIONS)
                 }
             }
 
-        val permissionsToRequest = mutableListOf<String>().apply {
-
-            if (ContextCompat.checkSelfPermission(
-                    this@MainActivity,
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                add(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
+                // Android 10-12 (API 29-32)
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    permissionsToRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+                }
             }
 
-            if (ContextCompat.checkSelfPermission(
-                    this@MainActivity,
-                    android.Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                add(android.Manifest.permission.POST_NOTIFICATIONS)
+            else -> {
+                // Android 9 (API 28)
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    permissionsToRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+                }
             }
         }
 
         if (permissionsToRequest.isNotEmpty()) {
-            permissionLauncher.launch(permissionsToRequest.toTypedArray())
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsToRequest.toTypedArray(),
+                PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            grantResults.forEachIndexed { index, result ->
+                if (result == PackageManager.PERMISSION_GRANTED) {
+                    println("Permission ${permissions[index]} granted")
+                    loadFragment(SongFragment())
+                } else {
+                    println("Permission ${permissions[index]} denied")
+                }
+            }
         }
     }
 

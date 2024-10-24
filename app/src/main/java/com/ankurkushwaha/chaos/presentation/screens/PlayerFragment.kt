@@ -258,7 +258,6 @@ class PlayerFragment : BottomSheetDialogFragment() {
                             showToast(requireContext(), "Added to favorites")
                         }
                     }
-
                 }
             }
         }

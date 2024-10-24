@@ -140,7 +140,7 @@ class FavoritesFragment : Fragment(), OnSongMenuClickListener {
 
 
     override fun onPlayNext(song: Song) {
-        (context as MusicService).queueNextSong(song)
+        musicService?.queueNextSong(song)
         showToast(requireContext(), "Song added to play next.")
     }
 
